@@ -13,18 +13,18 @@ import com.fidelity.models.Order;
 import com.fidelity.models.Portfolio;
 import com.fidelity.models.Trade;
 import com.fidelity.repository.PortfolioRepository;
-import com.fidelity.service.TradeService;
+import com.fidelity.service.TradeServiceImpl;
 
 public class TradeServiceTest {
 
 	
-	private TradeService tservice;
+	private TradeServiceImpl tservice;
 	private PortfolioRepository portrepo;
     Portfolio portfolio;
 	
 	@BeforeEach
 	public void setUp() {
-		tservice=new TradeService();
+		tservice=new TradeServiceImpl();
 		portfolio=new Portfolio("CLP1",BigInteger.valueOf(1004566),"Brokerage",
 				new BigDecimal(10000),"Brokerage Portfolio",null);
 	}
