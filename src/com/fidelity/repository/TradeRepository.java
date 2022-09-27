@@ -5,7 +5,7 @@ import com.fidelity.models.Trade;
 
 public abstract class TradeRepository {
      
-	public abstract Trade executeOrder(Order order);
-	public abstract Trade carryBuyTransaction(Order order);
-	public abstract Trade carrySellTransaction(Order order);
+	public abstract Trade executeOrder(Order order) throws Exception;
+	public abstract Trade carryBuyTransaction(Order order) throws Exception;
+	public abstract Trade carrySellTransaction(Order order) throws Exception;
 }
