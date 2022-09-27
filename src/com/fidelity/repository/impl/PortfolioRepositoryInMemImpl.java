@@ -87,15 +87,24 @@ private static PortfolioRepository instance;
 	}
 
 	@Override
-	public Portfolio updatePortfolioFromIdAndLoadOfInstrument(Portfolio portfolio) throws Exception {
+	public Portfolio updatePortfolioFromIdAndLoadOfInstrument(Portfolio portfolio,String instrumentId) throws Exception {
 		Portfolio existing=this.getPortfolioForAuserFromPortfolioId(portfolio.getPortfolioId());
-		PortfolioHoldings updatedValue=portfolio.getHoldings().get(0);
-		List<PortfolioHoldings> filtered=existing.getHoldings().stream().filter( h -> h.getInsrumentId().equals(updatedValue.getInsrumentId())).toList();
+		List<PortfolioHoldings> filtered=existing.getHoldings().stream().filter( h -> h.getInsrumentId().equals(instrumentId)).toList();
+		// if the user is having one, then do as below
 		if(filtered.size()==1) {
-			filtered.get(0).setQuantity(updatedValue.getQuantity());
-			filtered.get(0).setInvetsmentprice(updatedValue.getInvetsmentprice());
-			filtered.get(0).setLastUpdateAt(updatedValue.getLastUpdateAt());
+			// if the updated portfolio has a entry, then do as below
+			if(portfolio.getHoldings().size()==1) {
+				PortfolioHoldings updatedValue=portfolio.getHoldings().get(0);
+				filtered.get(0).setQuantity(updatedValue.getQuantity());
+				filtered.get(0).setInvetsmentprice(updatedValue.getInvetsmentprice());
+				filtered.get(0).setLastUpdateAt(updatedValue.getLastUpdateAt());
+			}else {
+				// if the user has sold all his instruments there is a need to remove that entry
+				existing.getHoldings().remove(filtered.get(0));
+			}
+			
 		}else {
+			PortfolioHoldings updatedValue=portfolio.getHoldings().get(0);
 			existing.getHoldings().add(updatedValue);
 		}
 		existing.setBalance(portfolio.getBalance());
