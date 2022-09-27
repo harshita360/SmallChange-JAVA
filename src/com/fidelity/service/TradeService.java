@@ -18,28 +18,48 @@ public class TradeService extends TradeRepository{
 	//PortfolioService portservice;
 	
 	@Override
-	public Trade carryBuyTransaction(Order order) {
+	public Trade executeOrder(Order order) {
+		// TODO Auto-generated method stub
 		//checking if the order is assosiated with a valid clientId
 //		if(user.getLoggedInUser!=order.getClientId())
 //		{
 //		  throw new UnauthenticatedUserException("This User ID is not authenticated");	
 //		}
 		
+		if(order.getDirection().equals("B"))
+		{
+			return carryBuyTransaction(order);
+		}
+		else if (order.getDirection().equals("S")) {
+			return carryBuyTransaction(order);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Not a valid order direction");
+		}
 		
-		//checking if the client has enough balance to execute the trade
+		
+		
+	}
+
+	
+	@Override
+	public Trade carryBuyTransaction(Order order) {
+		
+		
 		
 		Portfolio portfolio=portService.getThePortfolioOfIdAndItsInstrumentOnly(order.getPortfolioId(),order.getInstrumentId());
 		
-		if(order.getDirection().equals("B")){
-			if(!portfolio.checkBuyEligibility(order)) {
+		
+		if(!portfolio.checkBuyEligibility(order)) {
 				throw new IneligibleOrderException("Portfolio not allowed to do sumit order");
 			}
-		}
+		
 		
 		BigDecimal executionPrice=order.getTargetPrice().multiply(BigDecimal.valueOf(order.getQuantity()));
 		BigDecimal cashValue=executionPrice.add(BigDecimal.valueOf(3));
 		
-		if(portfolio.getBalance().compareTo(executionPrice)<0) {
+		if(portfolio.getBalance().compareTo(cashValue)<0) {
 			throw new InsufficientBalanceException("Not Enough balance to execute order");
 		}
 		Trade trade=new Trade(UUID.randomUUID().toString(),order.getDirection(),order,order.getClientId(),
@@ -52,9 +72,27 @@ public class TradeService extends TradeRepository{
 	@Override
 	public Trade carrySellTransaction(Order order) {
 		// TODO Auto-generated method stub
-		return null;
+        Portfolio portfolio=portService.getThePortfolioOfIdAndItsInstrumentOnly(order.getPortfolioId(),order.getInstrumentId());
+		
+		
+		if(!portfolio.checkSellEligibility(order)) {
+				throw new IneligibleOrderException("Portfolio not allowed to do sumit order");
+			}
+		
+		
+		BigDecimal executionPrice=order.getTargetPrice().multiply(BigDecimal.valueOf(order.getQuantity()));
+		BigDecimal cashValue=executionPrice.add(BigDecimal.valueOf(3));
+		
+		
+		Trade trade=new Trade(UUID.randomUUID().toString(),order.getDirection(),order,order.getClientId(),
+				order.getPortfolioId(),order.getInstrumentId(),executionPrice,cashValue,order.getQuantity());
+		
+		
+		return trade; 
+		
 	}
 
+	
 	
    
 }
