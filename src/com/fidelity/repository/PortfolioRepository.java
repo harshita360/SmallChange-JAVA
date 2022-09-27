@@ -23,6 +23,6 @@ public abstract class PortfolioRepository {
 	public abstract void deletePortfolioById(String portfolioID) throws Exception;
 	public abstract void deletePortfolioByClientId(BigInteger clientId) throws Exception;
 	public abstract Portfolio getPortfolioFromIdAndLoadOfInstrument(String portfolioId,String instrumentId) throws Exception;
-	public abstract Portfolio updatePortfolioFromIdAndLoadOfInstrument(Portfolio portfolio) throws Exception;
+	public abstract Portfolio updatePortfolioFromIdAndLoadOfInstrument(Portfolio portfolio,String instrumentId) throws Exception;
 
 }
