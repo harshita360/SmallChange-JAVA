@@ -4,16 +4,21 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Objects;
 
+import com.fidelity.exceptions.IneligibleOrderException;
+
 public class Order {
-	
 	private String orderId;
 	private String direction;
 	private BigInteger clientId;
 	private String portfolioId;
 	private String instrumentId;
 	public Order(String orderId, String direction, BigInteger clientId, String portfolioId, String instrumentId,
-			Integer quantity, BigDecimal targetPrice) {
+			Integer quantity, BigDecimal targetPrice) throws IneligibleOrderException {
 		super();
+		if(!(direction.equals("B")|| (direction.equals("S"))))
+		{
+			throw new IneligibleOrderException("The order does not have a valid direction");
+		}
 		this.orderId = orderId;
 		this.direction = direction;
 		this.clientId = clientId;
@@ -176,5 +181,4 @@ public class Order {
 	}
 	
 	
-
 }

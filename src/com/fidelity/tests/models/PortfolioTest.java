@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.fidelity.exceptions.IneligibleOrderException;
 import com.fidelity.models.Order;
 import com.fidelity.models.Portfolio;
 import com.fidelity.models.PortfolioHoldings;
@@ -198,21 +199,21 @@ public class PortfolioTest {
 	
 	@DisplayName("Should return true for buy eligibility")
 	@Test
-	public void testForBuyEligibility1() {
+	public void testForBuyEligibility1() throws IneligibleOrderException {
 		Order order=new Order("UUTT789","B",portfolio.getClientId(),portfolio.getPortfolioId(),"Q34R",10,new BigDecimal(10.876));
 		assertTrue(portfolio.checkBuyEligibility(order));
 	}
 	
 	@DisplayName("Should return false for buy eligibility")
 	@Test
-	public void testForBuyEligibility2() {
+	public void testForBuyEligibility2() throws IneligibleOrderException {
 		Order order=new Order("UUTT789","B",portfolio.getClientId(),portfolio.getPortfolioId(),"Q34R",100,new BigDecimal(128.876));
 		assertFalse(portfolio.checkBuyEligibility(order));
 	}
 	
 	@DisplayName("Should return true for sell eligibility")
 	@Test
-	public void testForSelEligibility1() {
+	public void testForSelEligibility1() throws IneligibleOrderException {
 		LocalDateTime now=LocalDateTime.now();
 		PortfolioHoldings holding=new PortfolioHoldings("TSL",BigInteger.valueOf(10),new BigDecimal(1000.544),now,now);
 		List<PortfolioHoldings> holdings=new ArrayList<>();
@@ -225,7 +226,7 @@ public class PortfolioTest {
 	
 	@DisplayName("Should return false for sell eligibility")
 	@Test
-	public void testForSelEligibility2() {
+	public void testForSelEligibility2() throws IneligibleOrderException {
 		LocalDateTime now=LocalDateTime.now();
 		PortfolioHoldings holding=new PortfolioHoldings("TSL",BigInteger.valueOf(10),new BigDecimal(1000.544),now,now);
 		List<PortfolioHoldings> holdings=new ArrayList<>();
