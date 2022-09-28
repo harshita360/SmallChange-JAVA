@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fidelity.enums.Implementations;
+import com.fidelity.enums.ResourceType;
 import com.fidelity.exceptions.IneligibleOrderException;
 import com.fidelity.exceptions.InsufficientBalanceException;
 import com.fidelity.exceptions.UnauthenticatedUserException;
@@ -14,19 +16,29 @@ import com.fidelity.repository.PortfolioRepository;
 
 public class TradeServiceImpl extends TradeService{
 
+	PortfolioService portservice;
 	
-	//UserService userservice;
-	//PortfolioService portservice;
-	PortfolioRepository portRepo;
 	
+	
+	public TradeServiceImpl(PortfolioService portservice) throws Exception {
+		super();
+		if(portservice==null)
+		{
+			this.portservice=PortfolioService.getInstance();
+			
+		}
+		else
+		{
+			this.portservice=portservice;
+		}
+		
+	}
+
+
 	@Override
 	public Trade executeOrder(Order order) throws Exception {
 		// TODO Auto-generated method stub
-		//checking if the order is assosiated with a valid clientId
-//		if(user.getLoggedInUser!=order.getClientId())
-//		{
-//		  throw new UnauthenticatedUserException("This User ID is not authenticated");	
-//		}
+		
 		
 		if(order.getDirection().equals("B"))
 		{
@@ -45,10 +57,10 @@ public class TradeServiceImpl extends TradeService{
 	@Override
 	public Trade carryBuyTransaction(Order order)throws Exception {
 		
-		Portfolio portfolio=portRepo.getPortfolioFromIdAndLoadOfInstrument(order.getPortfolioId(), order.getInstrumentId());
+		Portfolio portfolio=portservice.getThePortfolioOfIdAndItsIntrumentOnly(order.getPortfolioId(), order.getInstrumentId());
 		
 		if(!portfolio.checkBuyEligibility(order)) {
-				throw new IneligibleOrderException("Portfolio not allowed to do sumit order");
+				throw new IneligibleOrderException("Portfolio not allowed to do sumit order.Might not have enough balance");
 			}
 		
 		
@@ -68,7 +80,7 @@ public class TradeServiceImpl extends TradeService{
 	@Override
 	public Trade carrySellTransaction(Order order) throws Exception {
 		// TODO Auto-generated method stub
-        Portfolio portfolio=portRepo.getPortfolioFromIdAndLoadOfInstrument(order.getPortfolioId(),order.getInstrumentId());
+        Portfolio portfolio=portservice.getThePortfolioOfIdAndItsIntrumentOnly(order.getPortfolioId(),order.getInstrumentId());
 		
 		if(!portfolio.checkSellEligibility(order)) {
 				throw new IneligibleOrderException("Portfolio not allowed to do sumit order");

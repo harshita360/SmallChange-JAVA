@@ -3,6 +3,14 @@ package com.fidelity.models;
 public class ClientIdentification {
 	private String type;
 	private String value;
+	
+	
+	
+	public ClientIdentification(String type, String value) {
+		super();
+		this.type = type;
+		this.value = value;
+	}
 	public String getType() {
 		return type;
 	}
