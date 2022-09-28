@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fidelity.enums.Implementations;
+import com.fidelity.enums.ResourceType;
 import com.fidelity.exceptions.IneligibleOrderException;
 import com.fidelity.exceptions.InsufficientBalanceException;
 import com.fidelity.exceptions.UnauthenticatedUserException;
@@ -19,6 +21,18 @@ public class TradeServiceImpl extends TradeService{
 	//PortfolioService portservice;
 	PortfolioRepository portRepo;
 	
+	
+	
+	public TradeServiceImpl(PortfolioRepository portRepo) throws Exception {
+		super();
+		if(portRepo==null) {
+			this.portRepo=PortfolioRepository.getInstance(Implementations.IN_MEM, ResourceType.SINGLETON);
+		}else {
+			this.portRepo=portRepo;
+		}
+	}
+
+
 	@Override
 	public Trade executeOrder(Order order) throws Exception {
 		// TODO Auto-generated method stub
