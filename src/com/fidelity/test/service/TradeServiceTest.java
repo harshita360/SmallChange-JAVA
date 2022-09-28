@@ -28,7 +28,6 @@ import com.fidelity.repository.ClientRepository;
 import com.fidelity.repository.PortfolioRepository;
 import com.fidelity.service.PortfolioService;
 import com.fidelity.service.TradeServiceImpl;
-import com.fidelity.warehouse.Warehouse;
 
 public class TradeServiceTest {
 
@@ -41,7 +40,7 @@ public class TradeServiceTest {
 	
 	@BeforeEach
 	public void setUp() throws Exception {
-		 clnt1 = new Client(new BigInteger("1004566"),"user-1","user1@gmail.com","pwd2341","653672","India",LocalDate.now(),null,null,null);
+		 clnt1 = new Client(new BigInteger("1004566"),"user-1","user981@gmail.com","pwd2341","653672","India",LocalDate.now(),null,null,null);
 		
 		userRepo=ClientRepository.getInstance(Implementations.IN_MEM , ResourceType.SINGLETON);
 		
