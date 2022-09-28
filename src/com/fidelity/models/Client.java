@@ -8,6 +8,21 @@ public class Client {
 	private BigInteger clientId;
 	private String name;
 	private String email;
+	public Client(BigInteger clientId, String name, String email, String password, String postalCode, String country,
+			LocalDate dateOfBirth, BigInteger token, ClientIdentification[] clientIdentification,
+			String investmentRiskAppetite) {
+		super();
+		this.clientId = clientId;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.postalCode = postalCode;
+		this.country = country;
+		this.dateOfBirth = dateOfBirth;
+		this.token = token;
+		this.clientIdentification = clientIdentification;
+		this.investmentRiskAppetite = investmentRiskAppetite;
+	}
 	private String password;
 	private String postalCode;
 	private String country;

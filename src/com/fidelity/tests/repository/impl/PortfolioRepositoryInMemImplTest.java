@@ -22,7 +22,7 @@ import com.fidelity.models.PortfolioHoldings;
 import com.fidelity.repository.PortfolioRepository;
 import com.fidelity.repository.impl.PortfolioRepositoryInMemImpl;
 
-@DisplayName("Portfolio Repository")
+@DisplayName("Portfolio Repository In memory")
 public class PortfolioRepositoryInMemImplTest {
 
 	PortfolioRepository portRepo;

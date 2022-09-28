@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-17.0.1">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="libs/mockito-core-4.8.0.jar"/>
+	<classpathentry kind="lib" path="libs/mockito-junit-jupiter-4.8.0.jar"/>
+	<classpathentry kind="lib" path="libs/byte-buddy-1.12.14.jar"/>
+	<classpathentry kind="lib" path="libs/byte-buddy-agent-1.12.14.jar"/>
+	<classpathentry kind="lib" path="libs/objenesis-3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

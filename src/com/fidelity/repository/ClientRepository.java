@@ -15,12 +15,12 @@ public abstract class ClientRepository {
 		default: throw new Exception("Invalid Choice");
 		}
 	}
-	public abstract Client registerNewUser(Client client) throws Exception;
-	public abstract Client authenticateUser(String email,String password) throws Exception;
+	public abstract Client registerNewUser(Client client) ;
+	public abstract Client authenticateUser(String email,String password) ;
 	public abstract Client getLoggedInUser();
 	public abstract boolean isUserLoggedIn();
 	public abstract void logoutUser();
-	public abstract void removeUserById(BigInteger clientId) throws Exception;
-	public abstract Client getUserById(BigInteger clientId) throws Exception;
-	public abstract Client getUserByEmail(String email) throws Exception;
+	public abstract void removeUserById(BigInteger clientId) ;
+	public abstract Client getUserById(BigInteger clientId);
+	public abstract Client getUserByEmail(String email) ;
 }

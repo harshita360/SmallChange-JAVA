@@ -9,20 +9,20 @@ import com.fidelity.exceptions.ClientException;
 import com.fidelity.models.Client;
 import com.fidelity.repository.ClientRepository;
 
-public class ClientReposirotyInMem extends ClientRepository{
+public class ClientRepositoryImpl extends ClientRepository {
 
 	private List<Client> clients = new ArrayList<>();
 	private Client loggedInUser = null; //For the Current Active User
-	private static ClientReposirotyInMem instance;
+	private static ClientRepositoryImpl instance;
 	
-	public static ClientReposirotyInMem getInstance(ResourceType resource) {
+	public static ClientRepositoryImpl getInstance(ResourceType resource) {
 		if(resource.equals(ResourceType.PROTY_TYPE)) {
-			return new ClientReposirotyInMem();
+			return new ClientRepositoryImpl();
 		}
 		if(instance==null) {
-			synchronized (ClientReposirotyInMem.class) {
+			synchronized (ClientRepositoryImpl.class) {
 				if(instance==null) {
-					instance=new ClientReposirotyInMem();
+					instance=new ClientRepositoryImpl();
 					System.out.println("created new repo");
 				}
 				
@@ -43,17 +43,13 @@ public class ClientReposirotyInMem extends ClientRepository{
 
 	//Authenticate User Basically sets the Current Active Session to the LoggedInUser
 	@Override
-	public Client authenticateUser(String email, String password) {
-		// TODO Auto-generated method stub
+	public Client authenticateUser(String email, String password)  {
 		Client client=this.getUserByEmail(email);
-		//System.out.println(user);
-		if(client!=null) {
-			if(client.CheckPassword(password)) {
-				this.loggedInUser=client;
-				return client;
-			}
+		if(client.getPassword()==password) {
+			this.loggedInUser=client;
+			return client;
 		}
-		return null;
+		throw new ClientException("Invalid email or password!!!");
 	}
 
 	@Override
@@ -95,16 +91,11 @@ public class ClientReposirotyInMem extends ClientRepository{
 
 	@Override
 	public Client getUserByEmail(String email)  {
-		// TODO Auto-generated method stub
-		Client client = null;
-		List<Client> filtered = this.clients.stream().filter(c->c.getEmail().equals(email)).toList();
-		if(filtered.size()==1) {
-			client=filtered.get(0);
+		List<Client> value = clients.stream().filter(iter -> iter.getEmail().equals(email)).toList();
+		if(value.size()==0) {
+			return null;
 		}
-		if(client==null) {
-			throw new ClientException("User with requested email not found");
-		}
-		return client;
+		return(value.get(0));
 	}
 
 	@Override
@@ -112,7 +103,4 @@ public class ClientReposirotyInMem extends ClientRepository{
 		// TODO Auto-generated method stub
 		this.loggedInUser=null;
 	}
-
-		
-
 }

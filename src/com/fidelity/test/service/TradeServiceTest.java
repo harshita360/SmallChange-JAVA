@@ -1,6 +1,7 @@
 package com.fidelity.test.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -23,10 +24,15 @@ public class TradeServiceTest {
     Portfolio portfolio;
 	
 	@BeforeEach
-	public void setUp() {
-		tservice=new TradeServiceImpl();
+	public void setUp() throws Exception {
+		tservice=new TradeServiceImpl(null);
 		portfolio=new Portfolio("CLP1",BigInteger.valueOf(1004566),"Brokerage",
 				new BigDecimal(10000),"Brokerage Portfolio",null);
+	}
+	
+	@Test
+	public void correct() {
+		assertTrue(true);
 	}
 //	
 //	@Test

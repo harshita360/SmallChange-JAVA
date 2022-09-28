@@ -11,7 +11,7 @@ import com.fidelity.repository.PortfolioRepository;
 
 public class PortfolioRepositoryInMemImpl extends PortfolioRepository {
 	
-private static PortfolioRepository instance;
+	private static PortfolioRepository instance;
 	
 	public static PortfolioRepository getInstance(ResourceType resource) {
 		if(resource.equals(ResourceType.PROTY_TYPE)) {
