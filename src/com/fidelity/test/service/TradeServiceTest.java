@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,17 +48,16 @@ public class TradeServiceTest {
 		userRepo.registerNewUser(clnt1);
 		pservice=PortfolioService.getInstance();
 		tservice=new TradeServiceImpl(pservice);
-		portfolio=new Portfolio("CLP1",BigInteger.valueOf(1004566),"Brokerage",
+		portfolio=new Portfolio(null,BigInteger.valueOf(1004566),"Brokerage",
 				new BigDecimal(10000),"Brokerage Portfolio",null);
 		
 		pservice.addNewUserPortfolio(portfolio);
 	}
 	
-	@Test
-	public void correct() {
-		assertTrue(true);
+	@AfterEach
+	public void tearDown() {
+		userRepo.removeUserById(BigInteger.valueOf(1004566));
 	}
-	
 	@Test
 	void excecuteBuyOrder() throws IneligibleOrderException, Exception
 	{
@@ -66,33 +66,48 @@ public class TradeServiceTest {
 	}
 	
 
-//	
-//   @Test
-//   void buyingStockwithLowBalance() {
-//	   Portfolio portfolionew=new Portfolio("CLP1",BigInteger.valueOf(1004566),"Brokerage",
-//				new BigDecimal(100),"Brokerage Portfolio",null);
-//	   Exception e=assertThrows(IneligibleOrderException.class, () -> {
-//			tservice.carryBuyTransaction(new Order("UUTT987","B",portfolionew.getClientId(),portfolionew.getPortfolioId(),"Q34R",10,new BigDecimal(128.90)));
-//		});
-//		assertEquals("Portfolio not allowed to do sumit order.Might not have enough balance", e.getMessage());
-//   }
-//	
 	
-//	@Test
-//	void sellingNotExistingOrder() {
-//		PortfolioHoldings holding=new PortfolioHoldings("TSL",BigInteger.valueOf(5),new BigDecimal(1000.544),LocalDateTime.now(),LocalDateTime.now());
-//		List<PortfolioHoldings> holdings=new ArrayList<>();
-//		holdings.add(holding);
-//		Portfolio portfolionew=new Portfolio("CLP1",BigInteger.valueOf(1004566),"Brokerage",
-//				new BigDecimal(100),"Brokerage Portfolio",holdings); 
-//		
-//		Exception e=assertThrows(IneligibleOrderException.class, () -> {
-//			tservice.carrySellTransaction(new Order("CLP1","S",portfolionew.getClientId(),portfolionew.getPortfolioId(),"Q34R",10,new BigDecimal(128.90)));
-//		});
-//		assertEquals("Portfolio not allowed to do sumit order", e.getMessage());
-//   
-//		
-//	}
+   @Test
+   void buyingStockwithLowBalance() throws Exception {
+	   Portfolio portfolio1=new Portfolio(null,BigInteger.valueOf(1004566),"Brokerage",
+				new BigDecimal(100),"Brokerage Portfolio",null);
+	   Portfolio portfolionew=pservice.addNewUserPortfolio(portfolio1);
+	   Exception e=assertThrows(IneligibleOrderException.class, () -> {
+			tservice.carryBuyTransaction(new Order("UUTT987","B",portfolionew.getClientId(),portfolionew.getPortfolioId(),"Q34R",10,new BigDecimal(128.90)));
+		});
+		assertEquals("Portfolio not allowed to do sumit order.Might not have enough balance", e.getMessage());
+   }
+	
+	
+	@Test
+	void sellingNotExistingOrder() throws Exception {
+		PortfolioHoldings holding=new PortfolioHoldings("TSL",BigInteger.valueOf(5),new BigDecimal(1000.544),LocalDateTime.now(),LocalDateTime.now());
+		List<PortfolioHoldings> holdings=new ArrayList<>();
+		holdings.add(holding);
+		Portfolio portfolionew=new Portfolio(null,BigInteger.valueOf(1004566),"Brokerage",
+				new BigDecimal(100),"Brokerage Portfolio",null);
+		pservice.addNewUserPortfolio(portfolionew);
+		
+		Exception e=assertThrows(IneligibleOrderException.class, () -> {
+			tservice.carrySellTransaction(new Order("CLP1","S",portfolionew.getClientId(),portfolionew.getPortfolioId(),"Q34R",10,new BigDecimal(128.90)));
+		});
+		assertEquals("Portfolio not allowed to do sumit order", e.getMessage());
+		
+	}
+	
+	@Test
+	void excecuteSellOrder() throws Exception {
+		portfolio=new Portfolio(null,BigInteger.valueOf(1004566),"Brokerage",
+				new BigDecimal(10000),"Brokerage Portfolio",null);
+		pservice.addNewUserPortfolio(portfolio);
+		
+		Trade t=tservice.carryBuyTransaction(new  Order("UUTT789","B",portfolio.getClientId(),portfolio.getPortfolioId(),"Q34R",10,new BigDecimal(129.876)));
+		pservice.update(t);
+		Trade tsell=tservice.carrySellTransaction(new  Order("UUTT789","S",portfolio.getClientId(),portfolio.getPortfolioId(),"Q34R",2,new BigDecimal(129.876)));
+		assertNotNull(tsell);	
+
+		
+	}
 	
 	
 	
