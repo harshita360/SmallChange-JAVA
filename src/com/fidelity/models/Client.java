@@ -92,6 +92,13 @@ public class Client {
 	public void setInvestmentRiskAppetite(String investmentRiskAppetite) {
 		this.investmentRiskAppetite = investmentRiskAppetite;
 	}
+	public boolean CheckPassword(String password2) {
+		// TODO Auto-generated method stub
+		if(password2.equals(this.password)) {
+			return true;
+		}
+		return false;
+	}
 }
 
 
