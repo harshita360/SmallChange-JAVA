@@ -6,12 +6,13 @@ import com.fidelity.enums.Implementations;
 import com.fidelity.enums.ResourceType;
 import com.fidelity.models.Client;
 import com.fidelity.repository.impl.ClientReposirotyInMem;
+import com.fidelity.repository.impl.ClientRepositoryImpl;
 
 public abstract class ClientRepository {
 	
 	public static ClientRepository getInstance(Implementations implementation,ResourceType type) throws Exception {
 		switch(implementation) {
-		case IN_MEM: return ClientReposirotyInMem.getInstance(type);
+		case IN_MEM: return ClientRepositoryImpl.getInstance(type);
 		default: throw new Exception("Invalid Choice");
 		}
 	}
