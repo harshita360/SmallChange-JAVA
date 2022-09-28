@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fidelity.enums.ResourceType;
+import com.fidelity.exceptions.ClientException;
 import com.fidelity.models.Client;
 import com.fidelity.repository.ClientRepository;
 
@@ -31,10 +32,10 @@ public class ClientReposirotyInMem extends ClientRepository{
 	}
 	
 	@Override
-	public Client registerNewUser(Client client) throws Exception {
+	public Client registerNewUser(Client client)  {
 		// TODO Auto-generated method stub
 		if(this.getUserByEmail(client.getEmail())!=null) {
-			throw new Exception("Already user exist with this email");
+			throw new ClientException("Already user exist with this email");
 		}
 		this.clients.add(client);
 		return client;
@@ -42,7 +43,7 @@ public class ClientReposirotyInMem extends ClientRepository{
 
 	//Authenticate User Basically sets the Current Active Session to the LoggedInUser
 	@Override
-	public Client authenticateUser(String email, String password) throws Exception {
+	public Client authenticateUser(String email, String password) {
 		// TODO Auto-generated method stub
 		Client client=this.getUserByEmail(email);
 		//System.out.println(user);
@@ -71,7 +72,7 @@ public class ClientReposirotyInMem extends ClientRepository{
 	}
 
 	@Override
-	public void removeUserById(BigInteger clientId) throws Exception {
+	public void removeUserById(BigInteger clientId) {
 		// TODO Auto-generated method stub
 		Client client = this.getUserById(clientId);
 		this.clients.remove(client);
@@ -79,7 +80,7 @@ public class ClientReposirotyInMem extends ClientRepository{
 	}
 
 	@Override
-	public Client getUserById(BigInteger clientId) throws Exception {
+	public Client getUserById(BigInteger clientId)  {
 		// TODO Auto-generated method stub
 		Client client = null;
 		List<Client> filtered=this.clients.stream().filter( c-> c.getClientId().equals(clientId)).toList();
@@ -87,13 +88,13 @@ public class ClientReposirotyInMem extends ClientRepository{
 			client=filtered.get(0);
 		}
 		if(client==null) {
-			throw new Exception("User with requested client id not found");
+			throw new ClientException("User with requested client id not found");
 		}
 		return client;
 	}
 
 	@Override
-	public Client getUserByEmail(String email) throws Exception {
+	public Client getUserByEmail(String email)  {
 		// TODO Auto-generated method stub
 		Client client = null;
 		List<Client> filtered = this.clients.stream().filter(c->c.getEmail().equals(email)).toList();
@@ -101,7 +102,7 @@ public class ClientReposirotyInMem extends ClientRepository{
 			client=filtered.get(0);
 		}
 		if(client==null) {
-			throw new Exception("User with requested email not found");
+			throw new ClientException("User with requested email not found");
 		}
 		return client;
 	}

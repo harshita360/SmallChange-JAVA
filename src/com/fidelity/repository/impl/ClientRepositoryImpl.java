@@ -1,69 +1,106 @@
 package com.fidelity.repository.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fidelity.enums.ResourceType;
 import com.fidelity.exceptions.ClientException;
 import com.fidelity.models.Client;
 import com.fidelity.repository.ClientRepository;
 
 public class ClientRepositoryImpl extends ClientRepository {
 
-	private ArrayList<Client> client;
-	public ArrayList<Client> getClient() {
+	private List<Client> clients = new ArrayList<>();
+	private Client loggedInUser = null; //For the Current Active User
+	private static ClientReposirotyInMem instance;
+	
+	public static ClientReposirotyInMem getInstance(ResourceType resource) {
+		if(resource.equals(ResourceType.PROTY_TYPE)) {
+			return new ClientReposirotyInMem();
+		}
+		if(instance==null) {
+			synchronized (ClientReposirotyInMem.class) {
+				if(instance==null) {
+					instance=new ClientReposirotyInMem();
+					System.out.println("created new repo");
+				}
+				
+			}
+		}
+		return instance;
+	}
+	
+	@Override
+	public Client registerNewUser(Client client)  {
+		// TODO Auto-generated method stub
+		if(this.getUserByEmail(client.getEmail())!=null) {
+			throw new ClientException("Already user exist with this email");
+		}
+		this.clients.add(client);
 		return client;
 	}
 
-	public void setClient(ArrayList<Client> client) {
-		this.client = client;
-	}
-
-	private Client loggedInUser;
-	
+	//Authenticate User Basically sets the Current Active Session to the LoggedInUser
 	@Override
-	public Client authenticateUser(String email, String password) {
+	public Client authenticateUser(String email, String password)  {
 		Client client=this.getUserByEmail(email);
-			if(client.getPassword()==password) {
-				this.loggedInUser=client;
-				return client;
-			}
-			throw new ClientException("Invalid email or password!!!");
+		if(client.getPassword()==password) {
+			this.loggedInUser=client;
+			return client;
+		}
+		throw new ClientException("Invalid email or password!!!");
 	}
 
 	@Override
 	public Client getLoggedInUser() {
+		// TODO Auto-generated method stub
 		return this.loggedInUser;
 	}
 
+	@Override
+	public boolean isUserLoggedIn() {
+		// TODO Auto-generated method stub
+		if(this.loggedInUser!=null) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
-	public boolean logoutUser() {	
-		if(this.loggedInUser==null) {
-			return false;
-		}
+	public void removeUserById(BigInteger clientId) {
+		// TODO Auto-generated method stub
+		Client client = this.getUserById(clientId);
+		this.clients.remove(client);
 		
-		this.loggedInUser=null;
-		return true;
-	}
-
-
-	public ClientRepositoryImpl(ArrayList<Client> client) {
-		super();
-		setClient(client);
 	}
 
 	@Override
-	public Client getUserByEmail(String email) {
-		if(email=="") {
-			throw new IllegalArgumentException("Invalid input for email!!!");
+	public Client getUserById(BigInteger clientId)  {
+		// TODO Auto-generated method stub
+		Client client = null;
+		List<Client> filtered=this.clients.stream().filter( c-> c.getClientId().equals(clientId)).toList();
+		if(filtered.size()==1) {
+			client=filtered.get(0);
 		}
-		if(email==null) {
-			throw new NullPointerException("Email cannot be null!!!");
+		if(client==null) {
+			throw new ClientException("User with requested client id not found");
 		}
-		List<Client> value = client.stream().filter(iter -> iter.getEmail().equals(email)).toList();
+		return client;
+	}
+
+	@Override
+	public Client getUserByEmail(String email)  {
+		List<Client> value = clients.stream().filter(iter -> iter.getEmail().equals(email)).toList();
 		if(value.size()==0) {
-			throw new ClientException("No clients with entered email exists!!!");
+			return null;
 		}
 		return(value.get(0));
+	}
+
+	@Override
+	public void logoutUser() {
+		// TODO Auto-generated method stub
+		this.loggedInUser=null;
 	}
 }
