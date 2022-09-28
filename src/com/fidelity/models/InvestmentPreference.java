@@ -1,5 +1,6 @@
 package com.fidelity.models;
 
+import java.math.BigInteger;
 import java.util.Objects;
 
 import com.fidelity.enums.IncomeCategory;
@@ -7,17 +8,22 @@ import com.fidelity.enums.LengthOfInvetsment;
 import com.fidelity.enums.RiskTolerance;
 
 public class InvestmentPreference {
+	private BigInteger clientId;
 	private String investmentPurpose;
 	private RiskTolerance riskTolerance;
 	private IncomeCategory incomeCategory;
 	private LengthOfInvetsment lengthOfInvestment;
 	public InvestmentPreference(String investmentPurpose, RiskTolerance riskTolerance, IncomeCategory incomeCategory,
-			LengthOfInvetsment lengthOfInvestment) {
+			LengthOfInvetsment lengthOfInvestment, BigInteger clientId) {
 		super();
 		this.investmentPurpose = investmentPurpose;
 		this.riskTolerance = riskTolerance;
 		this.incomeCategory = incomeCategory;
 		this.lengthOfInvestment = lengthOfInvestment;
+		this.clientId = clientId;
+	}
+	public BigInteger getClientId() {
+		return clientId;
 	}
 	public String getInvestmentPurpose() {
 		return investmentPurpose;
