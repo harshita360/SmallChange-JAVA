@@ -13,16 +13,16 @@ public class ClientRepositoryImpl extends ClientRepository {
 
 	private List<Client> clients = new ArrayList<>();
 	private Client loggedInUser = null; //For the Current Active User
-	private static ClientReposirotyInMem instance;
+	private static ClientRepositoryImpl instance;
 	
-	public static ClientReposirotyInMem getInstance(ResourceType resource) {
+	public static ClientRepositoryImpl getInstance(ResourceType resource) {
 		if(resource.equals(ResourceType.PROTY_TYPE)) {
-			return new ClientReposirotyInMem();
+			return new ClientRepositoryImpl();
 		}
 		if(instance==null) {
-			synchronized (ClientReposirotyInMem.class) {
+			synchronized (ClientRepositoryImpl.class) {
 				if(instance==null) {
-					instance=new ClientReposirotyInMem();
+					instance=new ClientRepositoryImpl();
 					System.out.println("created new repo");
 				}
 				
