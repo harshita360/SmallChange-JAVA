@@ -4,12 +4,31 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fidelity.enums.ResourceType;
 import com.fidelity.exceptions.ActivityException;
 import com.fidelity.models.Trade;
 import com.fidelity.repository.ActivityRepository;
 
 public class ActivityRepositoryImpl extends ActivityRepository{
 	private List<Trade> activities;
+	private static ActivityRepositoryImpl instance;
+	
+	public static ActivityRepositoryImpl getInstance(ResourceType resource) {
+		if(resource.equals(ResourceType.PROTY_TYPE)) {
+			return new ActivityRepositoryImpl();
+		}
+		if(instance==null) {
+			synchronized (ActivityRepositoryImpl.class) {
+				if(instance==null) {
+					instance=new ActivityRepositoryImpl();
+					System.out.println("created new repo");
+				}
+				
+			}
+		}
+		return instance;
+	}
+	
 
 	@Override
 	public List<Trade> getActivities() {

@@ -12,7 +12,7 @@ import com.fidelity.repository.ClientRepository;
 public class ClientRepositoryImpl extends ClientRepository {
 
 	private List<Client> clients = new ArrayList<>();
-	private Client loggedInUser = null; //For the Current Active User
+	private Client loggedInUser = null; 
 	private static ClientRepositoryImpl instance;
 	
 	public static ClientRepositoryImpl getInstance(ResourceType resource) {
@@ -33,7 +33,6 @@ public class ClientRepositoryImpl extends ClientRepository {
 	
 	@Override
 	public Client registerNewUser(Client client)  {
-		// TODO Auto-generated method stub
 		if(this.getUserByEmail(client.getEmail())!=null) {
 			throw new ClientException("Already user exist with this email");
 		}
@@ -41,7 +40,6 @@ public class ClientRepositoryImpl extends ClientRepository {
 		return client;
 	}
 
-	//Authenticate User Basically sets the Current Active Session to the LoggedInUser
 	@Override
 	public Client authenticateUser(String email, String password)  {
 		Client client=this.getUserByEmail(email);
@@ -54,13 +52,11 @@ public class ClientRepositoryImpl extends ClientRepository {
 
 	@Override
 	public Client getLoggedInUser() {
-		// TODO Auto-generated method stub
 		return this.loggedInUser;
 	}
 
 	@Override
 	public boolean isUserLoggedIn() {
-		// TODO Auto-generated method stub
 		if(this.loggedInUser!=null) {
 			return true;
 		}
@@ -69,7 +65,6 @@ public class ClientRepositoryImpl extends ClientRepository {
 
 	@Override
 	public void removeUserById(BigInteger clientId) {
-		// TODO Auto-generated method stub
 		Client client = this.getUserById(clientId);
 		this.clients.remove(client);
 		
@@ -77,7 +72,6 @@ public class ClientRepositoryImpl extends ClientRepository {
 
 	@Override
 	public Client getUserById(BigInteger clientId)  {
-		// TODO Auto-generated method stub
 		Client client = null;
 		List<Client> filtered=this.clients.stream().filter( c-> c.getClientId().equals(clientId)).toList();
 		if(filtered.size()==1) {
@@ -100,7 +94,6 @@ public class ClientRepositoryImpl extends ClientRepository {
 
 	@Override
 	public void logoutUser() {
-		// TODO Auto-generated method stub
 		this.loggedInUser=null;
 	}
 }
