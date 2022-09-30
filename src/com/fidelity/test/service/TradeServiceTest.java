@@ -1,7 +1,6 @@
 package com.fidelity.test.service;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -19,14 +18,12 @@ import org.junit.jupiter.api.Test;
 import com.fidelity.enums.Implementations;
 import com.fidelity.enums.ResourceType;
 import com.fidelity.exceptions.IneligibleOrderException;
-import com.fidelity.exceptions.InsufficientBalanceException;
 import com.fidelity.models.Client;
 import com.fidelity.models.Order;
 import com.fidelity.models.Portfolio;
 import com.fidelity.models.PortfolioHoldings;
 import com.fidelity.models.Trade;
 import com.fidelity.repository.ClientRepository;
-import com.fidelity.repository.PortfolioRepository;
 import com.fidelity.service.PortfolioService;
 import com.fidelity.service.TradeServiceImpl;
 
@@ -47,7 +44,7 @@ public class TradeServiceTest {
 		
 		userRepo.registerNewUser(clnt1);
 		pservice=PortfolioService.getInstance();
-		tservice=new TradeServiceImpl(pservice);
+		tservice=new TradeServiceImpl(pservice,null);
 		portfolio=new Portfolio(null,BigInteger.valueOf(1004566),"Brokerage",
 				new BigDecimal(10000),"Brokerage Portfolio",null);
 		

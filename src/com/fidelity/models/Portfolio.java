@@ -56,7 +56,7 @@ public class Portfolio {
 			hold.setQuantity(hold.getQuantity().subtract(i));
 			
 			// reduce the investmentPrice
-			hold.getInvetsmentprice().subtract(trade.getCashValue());
+			hold.setInvetsmentprice(hold.getInvetsmentprice().subtract(trade.getCashValue()));
 			if(hold.getInvetsmentprice().compareTo(new BigDecimal(0))<0) {
 				hold.setInvetsmentprice(new BigDecimal(0));
 			}
@@ -78,20 +78,23 @@ public class Portfolio {
 	private void updateBuyInstrumentData(Trade trade,PortfolioHoldings hold) throws Exception {
 		
 		// user balance checking
+		//System.out.println("In update");
 		if(this.balance.compareTo(trade.getCashValue())>=0) {
 			
 			// checking if the data already there, if not create 1 and add to list
 			if(hold==null) {
 				hold=this.getHoldingDataFromTrade(trade);
 				this.holdings.add(hold);
+			}else {
+				hold.setQuantity(hold.getQuantity().add(BigInteger.valueOf(trade.getQuantity())));
+				hold.setInvetsmentprice(hold.getInvetsmentprice().add(trade.getCashValue()));
 			}
 			
 			// updating the balance and the holdings
 			this.balance=this.balance.subtract(trade.getCashValue());
 			//System.out.println("Portfolio balance"+this.balance+" trade"+trade.getCashValue());
-			hold.getQuantity().add(BigInteger.valueOf(trade.getQuantity()));
-			hold.getInvetsmentprice().add(trade.getCashValue());
 			hold.setLastUpdateAt(LocalDateTime.now());
+			//System.out.println("Updated buy "+hold);
 			
 		}else {
 			throw new Exception("Not enough balance in account");
@@ -103,15 +106,16 @@ public class Portfolio {
 	public void updateHoldings(Trade trade) throws Exception {
 		//List<PortfolioHoldings> heldFilter= this.holdings.stream().filter( h -> h.getInsrumentId().equals(trade.getInstrumentId())).toList();
 		 PortfolioHoldings hold=this.getTheHoldingsByInstrumnentId(trade.getInstrumentId());
-		
+		 //System.out.println("Goiung to updated main "+hold + trade);
 		if(hold==null && trade.getDirection()=="B") {
 			this.updateBuyInstrumentData(trade,null);
 		}else if(hold!=null) {
-			if(trade.getDirection()=="S") {
+			if(trade.getDirection().equals("S")) {
 				this.updateSellInstrumentData(trade, hold);
 			// doing if its buy an instrument	
 			}else if(trade.getDirection().equals("B")) {
 				// checking if the user has balance
+				//System.out.println("Goiung to updated");
 				this.updateBuyInstrumentData(trade,hold);
 				
 			}

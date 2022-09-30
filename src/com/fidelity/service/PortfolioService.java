@@ -109,6 +109,7 @@ public class PortfolioService implements MyObserver<Trade> {
 	@Override
 	public void update(Trade t) throws Exception {
 		Portfolio port=this.portRepo.getPortfolioFromIdAndLoadOfInstrument(t.getPortfolioId(), t.getInstrumentId());
+		System.out.println("Updating the trade to portfoliot");
 		port.updateHoldings(t);
 		this.portRepo.updatePortfolioFromIdAndLoadOfInstrument(port,t.getInstrumentId());
 		

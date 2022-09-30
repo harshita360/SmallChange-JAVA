@@ -13,15 +13,17 @@ import com.fidelity.models.Order;
 import com.fidelity.models.Portfolio;
 import com.fidelity.models.Trade;
 import com.fidelity.repository.PortfolioRepository;
+import com.fidelity.state.TradeSubject;
 
 public class TradeServiceImpl extends TradeService{
 
 	PortfolioService portservice;
+	private TradeSubject subject;
 	
 	
 	
-	public TradeServiceImpl(PortfolioService portservice) throws Exception {
-		super();
+	public TradeServiceImpl(PortfolioService portservice,TradeSubject subject) throws Exception {
+		//System.out.println("Subject ="+subject);
 		if(portservice==null)
 		{
 			this.portservice=PortfolioService.getInstance();
@@ -30,6 +32,12 @@ public class TradeServiceImpl extends TradeService{
 		else
 		{
 			this.portservice=portservice;
+		}
+		if(subject==null) {
+			this.subject=TradeSubject.getInstance();
+			//System.out.println("git oy subjectr");
+		}else {
+			this.subject=subject;
 		}
 		
 	}
@@ -42,11 +50,16 @@ public class TradeServiceImpl extends TradeService{
 		
 		if(order.getDirection().equals("B"))
 		{
-			return carryBuyTransaction(order);
+			
+			Trade executed=carryBuyTransaction(order);
+			subject.navigateUpdate(executed);
+			return executed;
 		}
-		else
-			return carryBuyTransaction(order);
-		
+		else {
+			Trade executed=carrySellTransaction(order);
+			subject.navigateUpdate(executed);
+			return executed;
+		}
 		
 		
 		
